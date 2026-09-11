@@ -1,18 +1,28 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+frontend/out/
 
-# Dataset
-chest_xray/
-
-# Models
-*.h5
-*.pth
-*.pt
-*.ckpt
-
-# Python
+# Python cache & envs
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.env
+.env.local
+.env.*.local
+venv/
+.venv/
 
-# Training outputs
+# System & IDE
+.DS_Store
+*.log
+.vscode/
+
+# Dataset & Training outputs
+chest_xray/
+dataset/
 runs/
 logs/
 weights/

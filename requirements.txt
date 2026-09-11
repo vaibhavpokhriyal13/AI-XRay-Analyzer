@@ -1,8 +1,0 @@
-tensorflow==2.16.1
-streamlit==1.32.0
-numpy==1.26.4
-matplotlib
-opencv-python-headless
-pillow
-scipy
-h5py
