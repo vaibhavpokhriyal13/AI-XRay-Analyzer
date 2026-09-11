@@ -19,10 +19,11 @@ export default async function handler(req, res) {
   try {
     const { imageBase64, isDemo, demoType, patientInfo } = req.body;
 
-    // 1. Connect directly to local native Python neural engine running model.h5
+    // 1. Connect directly to Python neural engine running model.h5
     if (!isDemo && imageBase64) {
       try {
-        const localRes = await fetch('http://127.0.0.1:5005/predict', {
+        const backendBase = (process.env.PYTHON_BACKEND_URL || 'http://127.0.0.1:5005').replace(/\/$/, '');
+        const localRes = await fetch(`${backendBase}/predict`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ imageBase64 })

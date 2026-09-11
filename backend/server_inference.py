@@ -81,10 +81,12 @@ class InferenceHandler(BaseHTTPRequestHandler):
         sys.stdout.write(f"[Backend HTTP] {args[0]} - {args[1]}\n")
         sys.stdout.flush()
 
-def run(port=5005):
-    server_address = ('127.0.0.1', port)
+def run(port=None):
+    if port is None:
+        port = int(os.environ.get("PORT", 5005))
+    server_address = ('0.0.0.0', port)
     httpd = HTTPServer(server_address, InferenceHandler)
-    print(f"[NeuroScan Backend] Serving real neural inference at http://127.0.0.1:{port}/predict")
+    print(f"[NeuroScan Backend] Serving real neural inference on port {port} at http://0.0.0.0:{port}/predict")
     httpd.serve_forever()
 
 if __name__ == '__main__':
