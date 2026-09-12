@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { UploadCloud, CheckCircle2, X, ZoomIn, ZoomOut, RotateCcw, Eye, AlertTriangle } from 'lucide-react';
+import { UploadCloud, CheckCircle2, X, ZoomIn, ZoomOut, RotateCcw, Eye, AlertTriangle, ChevronDown } from 'lucide-react';
 
 export default function Workstation({
   selectedFile,
@@ -19,6 +19,7 @@ export default function Workstation({
   const [zoom, setZoom] = useState(1);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [invert, setInvert] = useState(false);
+  const [showPatientContext, setShowPatientContext] = useState(false);
 
   const isDragging = useRef(false);
   const dragStart = useRef({ x: 0, y: 0 });
@@ -59,6 +60,143 @@ export default function Workstation({
     setPan({ x: 0, y: 0 });
     setInvert(false);
   };
+
+  const hasPatientData = Boolean(
+    patientInfo?.id?.trim() || 
+    patientInfo?.demographics?.trim() || 
+    patientInfo?.symptoms?.trim()
+  );
+
+  const renderPatientContext = () => (
+    <div style={{
+      background: '#f8fafc',
+      border: '1px solid var(--border-main)',
+      borderRadius: '10px',
+      overflow: 'hidden',
+      transition: 'border-color 0.2s ease, box-shadow 0.2s ease'
+    }}>
+      <button
+        type="button"
+        onClick={() => setShowPatientContext((prev) => !prev)}
+        style={{
+          width: '100%',
+          padding: '0.75rem 0.9rem',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          background: showPatientContext ? '#f1f5f9' : 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          userSelect: 'none',
+          transition: 'background 0.15s ease'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)' }}>
+            Optional Patient Clinical Context
+          </span>
+          {hasPatientData && (
+            <span style={{
+              fontSize: '0.66rem',
+              padding: '0.12rem 0.45rem',
+              borderRadius: '999px',
+              background: 'rgba(37, 99, 235, 0.1)',
+              color: 'var(--primary)',
+              fontWeight: 600,
+              fontFamily: 'var(--font-mono)'
+            }}>
+              {patientInfo.id ? `ID: ${patientInfo.id}` : 'Context Added'}
+            </span>
+          )}
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: 'var(--text-muted)', fontSize: '0.72rem', fontWeight: 500 }}>
+          <span>{showPatientContext ? 'Hide' : 'Expand / Enter'}</span>
+          <ChevronDown
+            size={15}
+            style={{
+              transform: showPatientContext ? 'rotate(180deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s ease'
+            }}
+          />
+        </div>
+      </button>
+
+      {showPatientContext && (
+        <div style={{
+          padding: '0.85rem',
+          borderTop: '1px solid var(--border-main)',
+          background: '#ffffff'
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
+            <div>
+              <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
+                Patient ID
+              </label>
+              <input
+                type="text"
+                value={patientInfo.id}
+                onChange={(e) => setPatientInfo({ ...patientInfo, id: e.target.value })}
+                placeholder="e.g. PT-84920"
+                style={{
+                  width: '100%',
+                  background: '#ffffff',
+                  border: '1px solid var(--border-main)',
+                  borderRadius: '6px',
+                  color: 'var(--text-main)',
+                  padding: '0.4rem 0.55rem',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono)'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
+                Age / Gender
+              </label>
+              <input
+                type="text"
+                value={patientInfo.demographics}
+                onChange={(e) => setPatientInfo({ ...patientInfo, demographics: e.target.value })}
+                placeholder="e.g. 54 / M"
+                style={{
+                  width: '100%',
+                  background: '#ffffff',
+                  border: '1px solid var(--border-main)',
+                  borderRadius: '6px',
+                  color: 'var(--text-main)',
+                  padding: '0.4rem 0.55rem',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono)'
+                }}
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
+                Symptoms
+              </label>
+              <input
+                type="text"
+                value={patientInfo.symptoms}
+                onChange={(e) => setPatientInfo({ ...patientInfo, symptoms: e.target.value })}
+                placeholder="e.g. Fever, Cough"
+                style={{
+                  width: '100%',
+                  background: '#ffffff',
+                  border: '1px solid var(--border-main)',
+                  borderRadius: '6px',
+                  color: 'var(--text-main)',
+                  padding: '0.4rem 0.55rem',
+                  fontSize: '0.78rem',
+                  fontFamily: 'var(--font-mono)'
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column' }}>
@@ -164,82 +302,8 @@ export default function Workstation({
             </p>
           </div>
 
-          {/* Optional Patient Clinical Context */}
-          <div style={{
-            padding: '1rem',
-            background: '#f8fafc',
-            border: '1px solid var(--border-main)',
-            borderRadius: '10px'
-          }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--text-muted)', marginBottom: '0.65rem' }}>
-              Optional Patient Clinical Context
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '0.6rem' }}>
-              <div>
-                <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
-                  Patient ID
-                </label>
-                <input
-                  type="text"
-                  value={patientInfo.id}
-                  onChange={(e) => setPatientInfo({ ...patientInfo, id: e.target.value })}
-                  placeholder="e.g. PT-84920"
-                  style={{
-                    width: '100%',
-                    background: '#ffffff',
-                    border: '1px solid var(--border-main)',
-                    borderRadius: '6px',
-                    color: 'var(--text-main)',
-                    padding: '0.4rem 0.55rem',
-                    fontSize: '0.78rem',
-                    fontFamily: 'var(--font-mono)'
-                  }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
-                  Age / Gender
-                </label>
-                <input
-                  type="text"
-                  value={patientInfo.demographics}
-                  onChange={(e) => setPatientInfo({ ...patientInfo, demographics: e.target.value })}
-                  placeholder="e.g. 54 / M"
-                  style={{
-                    width: '100%',
-                    background: '#ffffff',
-                    border: '1px solid var(--border-main)',
-                    borderRadius: '6px',
-                    color: 'var(--text-main)',
-                    padding: '0.4rem 0.55rem',
-                    fontSize: '0.78rem',
-                    fontFamily: 'var(--font-mono)'
-                  }}
-                />
-              </div>
-              <div>
-                <label style={{ fontSize: '0.68rem', fontWeight: 500, color: 'var(--text-muted)', display: 'block', marginBottom: '0.2rem' }}>
-                  Symptoms
-                </label>
-                <input
-                  type="text"
-                  value={patientInfo.symptoms}
-                  onChange={(e) => setPatientInfo({ ...patientInfo, symptoms: e.target.value })}
-                  placeholder="e.g. Fever, Cough"
-                  style={{
-                    width: '100%',
-                    background: '#ffffff',
-                    border: '1px solid var(--border-main)',
-                    borderRadius: '6px',
-                    color: 'var(--text-main)',
-                    padding: '0.4rem 0.55rem',
-                    fontSize: '0.78rem',
-                    fontFamily: 'var(--font-mono)'
-                  }}
-                />
-              </div>
-            </div>
-          </div>
+          {/* Collapsible Patient Clinical Context */}
+          {renderPatientContext()}
         </div>
       ) : (
         /* STATE 2: Image Uploaded (Workstation Viewport + Controls + Scan Button) */
@@ -353,6 +417,9 @@ export default function Workstation({
               </div>
             </div>
           )}
+
+          {/* Optional Patient Clinical Context */}
+          {renderPatientContext()}
 
           {/* Primary Action Button */}
           <div>
