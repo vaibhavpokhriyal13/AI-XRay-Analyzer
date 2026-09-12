@@ -6,7 +6,10 @@ export default function Document() {
       <Head>
         <meta charSet="utf-8" />
         <meta name="theme-color" content="#030712" />
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🫁</text></svg>" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+        <link rel="shortcut icon" href="/favicon.ico?v=2" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
       <body>
         <Main />

@@ -172,6 +172,10 @@ export default function Home() {
         <title>NeuroScan AI — Thoracic Radiograph Diagnostic Workstation</title>
         <meta name="description" content="State of the art chest X-ray deep learning clinical intelligence platform." />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=2" />
+        <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
+        <link rel="shortcut icon" href="/favicon.ico?v=2" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
 
       <div className="ambient-background" />
